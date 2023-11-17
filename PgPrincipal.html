@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoramento do Avião</title>
+    <!-- Adicione o link CDN para o Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #00ff00;
+            text-align: center;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1em;
+        }
+
+        #charts-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        .chart-container {
+            width: 45%;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Monitoramento do Avião</h1>
+    </header>
+
+    <div id="charts-container">
+        <!-- Gráfico de RPM -->
+        <div class="chart-container">
+            <canvas id="rpmChart"></canvas>
+            <h2>Rotação do Motor: <span id="rpmCounter">0</span> RPM</h2>
+        </div>
+
+        <!-- Gráfico de Temperatura -->
+        <div class="chart-container">
+            <canvas id="temperatureChart"></canvas>
+            <h2>Temperatura:</h2>
+        </div>
+
+        <!-- Gráfico de Umidade -->
+        <div class="chart-container">
+            <canvas id="humidityChart"></canvas>
+            <h2>Umidade:</h2>
+        </div>
+    </div>
+
+    <script>
+        // Código JavaScript para inicializar os gráficos
+        var rpmCtx = document.getElementById('rpmChart').getContext('2d');
+        var rpmChart = new Chart(rpmCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'RPM',
+                    data: [],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2,
+                    fill: false
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom'
+                    },
+                    y: {
+                        min: 0
+                    }
+                }
+            }
+        });
+
+        var temperatureCtx = document.getElementById('temperatureChart').getContext('2d');
+        var temperatureChart = new Chart(temperatureCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Temperatura (°C)',
+                    data: [],
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 2,
+                    fill: false
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom'
+                    },
+                    y: {
+                        min: 0
+                    }
+                }
+            }
+        });
+
+        var humidityCtx = document.getElementById('humidityChart').getContext('2d');
+        var humidityChart = new Chart(humidityCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Umidade (%)',
+                    data: [],
+                    borderColor: 'rgba(255, 206, 86, 1)',
+                    borderWidth: 2,
+                    fill: false
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom'
+                    },
+                    y: {
+                        min: 0,
+                        max: 100
+                    }
+                }
+            }
+        });
+
+        // Atualiza os gráficos com novos dados
+        function updateCharts(rpmData, temperatureData, humidityData) {
+            rpmChart.data.labels.push('');
+            rpmChart.data.datasets[0].data.push(rpmData);
+            rpmChart.update();
+
+            temperatureChart.data.labels.push('');
+            temperatureChart.data.datasets[0].data.push(temperatureData);
+            temperatureChart.update();
+
+            humidityChart.data.labels.push('');
+            humidityChart.data.datasets[0].data.push(humidityData);
+            humidityChart.update();
+        }
+
+        // Atualiza o contador de RPM
+        function updateRPMCounter(rpm) {
+            document.getElementById('rpmCounter').innerText = rpm;
+        }
+
+        // Simulação de dados (substitua isso com os dados reais do seu sensor)
+        setInterval(function () {
+            var rpmData = Math.floor(Math.random() * (1000 - 800 + 1) + 800);
+            var temperatureData = Math.floor(Math.random() * (30 - 20 + 1) + 20);
+            var humidityData = Math.floor(Math.random() * (60 - 40 + 1) + 40);
+
+            updateCharts(rpmData, temperatureData, humidityData);
+            updateRPMCounter(rpmData);
+        }, 2000);  // Atualiza a cada 2 segundos (simulação)
+    </script>
+</body>
+</html>
